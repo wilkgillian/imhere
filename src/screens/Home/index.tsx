@@ -1,11 +1,40 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+  TextInputChangeEventData,
+  NativeSyntheticEvent
+} from 'react-native';
+import React, { useState } from 'react';
 import { styles } from './styles';
 import Participant from '../../components/Participant';
 
 export default function Home() {
+  let participants = [
+    'Jão',
+    'tonho',
+    'jorgin',
+    'norbit',
+    'junho',
+    'zé',
+    'igo',
+    'bruno',
+    'mamaco'
+  ];
   function handleParticipantAdd() {
+    // participants.push(name);
     console.log('Teste');
+  }
+  function handleRemoveParticipant(name: string) {
+    participants.map(participant => {
+      if (name === participant) {
+        participants.pop();
+      }
+    });
+    console.log(`Participante removido ${name}`);
   }
   return (
     <View style={styles.container}>
@@ -23,8 +52,24 @@ export default function Home() {
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
-      <Participant />
-      <Participant />
+      <FlatList
+        data={participants}
+        renderItem={({ item }) => (
+          <Participant
+            key={item}
+            name={item}
+            handleRemoveParticipant={() => handleRemoveParticipant(item)}
+          />
+        )}
+        keyExtractor={item => item}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={() => (
+          <Text style={styles.listEmpty}>
+            Nenhum participante chegou ainda? Adicione participantes no botão
+            acima
+          </Text>
+        )}
+      />
     </View>
   );
 }
